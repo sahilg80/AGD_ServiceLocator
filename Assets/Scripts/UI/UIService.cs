@@ -19,10 +19,11 @@ namespace ServiceLocator.UI
         [SerializeField] private TextMeshProUGUI waveProgressText;
         [SerializeField] private TextMeshProUGUI currentMapText;
         [SerializeField] private Button nextWaveButton;
+        [SerializeField] private List<MapButton> mapButtons;
 
         [Header("Level Selection Panel")]
         [SerializeField] private GameObject levelSelectionPanel;
-        [SerializeField] private Button Map1Button;
+        //[SerializeField] private Button Map1Button;
 
         [Header("Monkey Selection UI")]
         private MonkeySelectionUIController monkeySelectionController;
@@ -39,6 +40,7 @@ namespace ServiceLocator.UI
 
         private WaveService waveService;
         private EventService eventService;
+        private int currentMapId;
 
         private void Start()
         {
@@ -60,8 +62,13 @@ namespace ServiceLocator.UI
             
             monkeySelectionController = new MonkeySelectionUIController(cellContainer, monkeyCellPrefab, monkeyCellScriptableObjects, playerService);
             monkeySelectionController.SetActive(false);
-            
+
+            foreach(var btn in mapButtons)
+            {
+                btn.Init(eventService);
+            }
             SubscribeToEvents();
+            SetMapsButtonState();
         }
 
         public void SubscribeToEvents() => eventService.OnMapSelected.AddListener(OnMapSelected);
@@ -73,6 +80,7 @@ namespace ServiceLocator.UI
             MonkeySelectionPanel.SetActive(true);
             monkeySelectionController.SetActive(true);
             currentMapText.SetText("Map: " + mapID);
+            currentMapId = mapID;
         }
 
         private void OnNextWaveButton()
@@ -84,6 +92,16 @@ namespace ServiceLocator.UI
         private void OnQuitButtonClicked() => Application.Quit();
 
         private void OnPlayAgainButtonClicked() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        private void SetMapsButtonState()
+        {
+            int mapCleared = PlayerPrefs.GetInt("MapCleared", 0);
+            for(int i = 0; i < mapButtons.Count; i++)
+            {
+                if(i <= mapCleared) mapButtons[i].GetComponent<Button>().interactable = true;
+                else mapButtons[i].GetComponent<Button>().interactable =false;
+            }
+        }
 
         public void SetNextWaveButton(bool setInteractable) => nextWaveButton.interactable = setInteractable;
 
@@ -100,9 +118,14 @@ namespace ServiceLocator.UI
             gameEndPanel.SetActive(true);
 
             if (hasWon)
+            {
                 gameEndText.SetText("You Won");
-            else
+                PlayerPrefs.SetInt("MapCleared", currentMapId);
+            }
+            else 
+            {
                 gameEndText.SetText("Game Over");
+            }
         }
 
     }
