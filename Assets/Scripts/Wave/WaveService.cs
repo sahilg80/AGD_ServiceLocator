@@ -7,6 +7,7 @@ using ServiceLocator.UI;
 using ServiceLocator.Sound;
 using ServiceLocator.Map;
 using ServiceLocator.Events;
+using ServiceLocator.Player;
 
 namespace ServiceLocator.Wave
 {
@@ -18,6 +19,7 @@ namespace ServiceLocator.Wave
         private SoundService soundService;
         private MapService mapService;
         private EventService eventService;
+        private PlayerService playerService;
 
         private int currentWaveId;
         private List<WaveData> waveDatas;
@@ -28,19 +30,22 @@ namespace ServiceLocator.Wave
             this.waveScriptableObject = waveScriptableObject;
         }
 
-        public void Init(UIService uiService, MapService mapService, SoundService soundService, EventService eventService)
+        public void Init(UIService uiService, MapService mapService, SoundService soundService, 
+            EventService eventService, PlayerService playerService)
         {
             this.uiService = uiService;
             this.mapService = mapService;
             this.soundService = soundService;
             this.eventService = eventService;
+            this.playerService = playerService;
+
             InitializeBloons();
             SubscribeToEvents();
         }
 
         private void InitializeBloons()
         {
-            bloonPool = new BloonPool(waveScriptableObject);
+            bloonPool = new BloonPool(waveScriptableObject, playerService, this, soundService);
             activeBloons = new List<BloonController>();
         }
 
