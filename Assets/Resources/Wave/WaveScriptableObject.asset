@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpawnRate: 0.25
   WaveConfigurations:
-  - {fileID: 11400000, guid: 6122e53498d7ca745993e2b4cacf85da, type: 2}
+  - {fileID: 11400000, guid: 96caf9058e4841e479c40efc75cad917, type: 2}
   - {fileID: 11400000, guid: 725f49ebe09b3af46b86d762c4ae4cdb, type: 2}
   BloonPrefab: {fileID: 5809090260471785846, guid: 36b92d4f037c49f42bb4578971e272e1, type: 3}
   BloonScriptableObjects:
   - {fileID: 11400000, guid: 45005e1015669c241a23ada66cdd35d7, type: 2}
   - {fileID: 11400000, guid: ea94ed707f901674ab17fa92fb1e75fc, type: 2}
   - {fileID: 11400000, guid: 62dbe99bc77263640a7119cdf12fc398, type: 2}
+  - {fileID: 11400000, guid: f03b50c907ecbf14e89550ec01c636e8, type: 2}
+  - {fileID: 11400000, guid: 23d05e2a1522d1c4b80aea5d900b67e9, type: 2}

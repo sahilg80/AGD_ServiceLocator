@@ -5,7 +5,7 @@ namespace ServiceLocator.Wave.Bloon
     public class BloonView : MonoBehaviour
     {
         public BloonController Controller { get ; set ; }
-        
+
         private SpriteRenderer spriteRenderer;
         private Animator animator;
 
@@ -15,9 +15,16 @@ namespace ServiceLocator.Wave.Bloon
             animator = GetComponent<Animator>();
         }
 
-        private void Update() => Controller.FollowWayPoints();
-
-        public void SetRenderer(Sprite spriteToSet) => spriteRenderer.sprite = spriteToSet;
+        private void Update()
+        {
+            Controller.MonitorTimer();
+            Controller.FollowWayPoints();
+        }
+        public void SetRenderer(Sprite spriteToSet)
+        {
+            if (spriteRenderer == null) return;
+            spriteRenderer.sprite = spriteToSet;
+        }
 
         public void SetSortingOrder(int sortingOrder) => spriteRenderer.sortingOrder = sortingOrder;
 
@@ -33,5 +40,6 @@ namespace ServiceLocator.Wave.Bloon
             gameObject.SetActive(false);
             Controller.OnPopAnimationPlayed();
         }
+
     }
 }

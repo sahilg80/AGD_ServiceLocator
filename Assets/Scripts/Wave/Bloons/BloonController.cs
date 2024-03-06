@@ -16,6 +16,8 @@ namespace ServiceLocator.Wave.Bloon
         private List<Vector3> waypoints;
         private int currentHealth;
         private int currentWaypointIndex;
+        private float timer;
+        private float totalDuration;
         private BloonState currentState;
         private PlayerService playerService;
         private WaveService waveService;
@@ -39,6 +41,24 @@ namespace ServiceLocator.Wave.Bloon
             this.bloonScriptableObject = bloonScriptableObject;
             InitializeVariables();
             SetState(BloonState.ACTIVE);
+            totalDuration = 3f;
+        }
+
+        public void MonitorTimer()
+        {
+            if (bloonScriptableObject.Type != BloonType.Boss) return;
+            timer += Time.deltaTime;
+            if (timer >= totalDuration)
+            {
+                Debug.Log("regenerating health ");
+                timer = 0f;
+                RegenerateHealth();
+            }
+        }
+
+        public void RegenerateHealth()
+        {
+            currentHealth += bloonScriptableObject.Health;
         }
 
         private void InitializeVariables()
@@ -67,6 +87,7 @@ namespace ServiceLocator.Wave.Bloon
 
             if (currentHealth <= 0 && currentState == BloonState.ACTIVE)
             {
+                timer = 0f;
                 PopBloon();
                 soundService.PlaySoundEffects(Sound.SoundType.BloonPop);
             }
@@ -96,6 +117,7 @@ namespace ServiceLocator.Wave.Bloon
             waveService.RemoveBloon(this);
             playerService.TakeDamage(bloonScriptableObject.Damage);
             bloonView.gameObject.SetActive(false);
+            timer = 0f;
         }
 
         private Vector3 GetDirectionToMoveTowards() => waypoints[currentWaypointIndex] - bloonView.transform.position;
