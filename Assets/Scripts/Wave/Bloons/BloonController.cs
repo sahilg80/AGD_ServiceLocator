@@ -44,13 +44,12 @@ namespace ServiceLocator.Wave.Bloon
             totalDuration = 3f;
         }
 
-        public void MonitorTimer()
+        public void CheckTimerToRegenerate()
         {
             if (bloonScriptableObject.Type != BloonType.Boss) return;
             timer += Time.deltaTime;
             if (timer >= totalDuration)
             {
-                Debug.Log("regenerating health ");
                 timer = 0f;
                 RegenerateHealth();
             }

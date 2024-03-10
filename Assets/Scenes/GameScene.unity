@@ -699,6 +699,14 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7182248004710957794, guid: 15430d56842a28843b57fd250730f142, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7182248004710957795, guid: 15430d56842a28843b57fd250730f142, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7182248004712830872, guid: 15430d56842a28843b57fd250730f142, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -729,7 +737,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7182248004752353289, guid: 15430d56842a28843b57fd250730f142, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 142.19
       objectReference: {fileID: 0}
     - target: {fileID: 7182248004752353289, guid: 15430d56842a28843b57fd250730f142, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -744,6 +752,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7182248005041137930, guid: 15430d56842a28843b57fd250730f142, type: 3}
+      propertyPath: monkeyCellPrefab
+      value: 
+      objectReference: {fileID: 105630951410673896, guid: c09d05090723f7f49ae5e8f69a9d84de, type: 3}
+    - target: {fileID: 7182248005041137930, guid: 15430d56842a28843b57fd250730f142, type: 3}
       propertyPath: mapButtons.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -757,12 +769,20 @@ PrefabInstance:
       objectReference: {fileID: 7182248004000416900}
     - target: {fileID: 7182248005041137930, guid: 15430d56842a28843b57fd250730f142, type: 3}
       propertyPath: monkeyCellScriptableObjects.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7182248005041137930, guid: 15430d56842a28843b57fd250730f142, type: 3}
       propertyPath: monkeyCellScriptableObjects.Array.data[1]
       value: 
       objectReference: {fileID: 11400000, guid: 7e59d2e4e596c4049bce2fe6e66638bf, type: 2}
+    - target: {fileID: 7182248005041137930, guid: 15430d56842a28843b57fd250730f142, type: 3}
+      propertyPath: monkeyCellScriptableObjects.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 507e5d9a07eed4847bc6a281c53ba5cf, type: 2}
+    - target: {fileID: 7182248005041137930, guid: 15430d56842a28843b57fd250730f142, type: 3}
+      propertyPath: monkeyCellScriptableObjects.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: da0292de1c923a34e88975ca7024ec60, type: 2}
     - target: {fileID: 7182248005041137931, guid: 15430d56842a28843b57fd250730f142, type: 3}
       propertyPath: m_Name
       value: Canvas - UI Service

@@ -136,7 +136,7 @@ namespace ServiceLocator.Player
                 PlayerDeath();
         }
 
-        private void DeductMoney(int moneyToDedecut)
+        public void DeductMoney(int moneyToDedecut)
         {
             Money -= moneyToDedecut;
             uiService.UpdateMoneyUI(Money);

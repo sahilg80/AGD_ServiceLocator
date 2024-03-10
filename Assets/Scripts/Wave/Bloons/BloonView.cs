@@ -17,9 +17,10 @@ namespace ServiceLocator.Wave.Bloon
 
         private void Update()
         {
-            Controller.MonitorTimer();
+            Controller.CheckTimerToRegenerate();
             Controller.FollowWayPoints();
         }
+
         public void SetRenderer(Sprite spriteToSet)
         {
             if (spriteRenderer == null) return;

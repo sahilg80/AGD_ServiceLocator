@@ -20,7 +20,7 @@ namespace ServiceLocator.UI
             this.monkeyCellSO = monkeyCellScriptableObject;
             monkeyCellView = Object.Instantiate(monkeyCellPrefab, cellContainer);
             monkeyCellView.SetController(this);
-            monkeyCellView.ConfigureCellUI(monkeyCellSO.Sprite, monkeyCellSO.Name, monkeyCellSO.Cost);
+            monkeyCellView.ConfigureCellUI(monkeyCellSO.Sprite, monkeyCellSO.Name, monkeyCellSO.Cost, monkeyCellSO.CostToUnlock, monkeyCellSO.Lockable);
         }
 
         public void MonkeyDraggedAt(Vector3 dragPosition)
@@ -32,5 +32,13 @@ namespace ServiceLocator.UI
         {
             playerService.TrySpawningMonkey(monkeyCellSO.Type, monkeyCellSO.Cost, dropPosition);
         }
+
+        public bool IsMonkeyUnlocked()
+        {
+            bool value = monkeyCellSO.Lockable && monkeyCellSO.CostToUnlock < playerService.Money;
+            if (value) playerService.DeductMoney(monkeyCellSO.CostToUnlock);
+            return value;
+        }
+
     }
 }

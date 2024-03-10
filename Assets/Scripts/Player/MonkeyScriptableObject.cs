@@ -14,6 +14,8 @@ namespace ServiceLocator.Player
         public ProjectileType projectileType;
         public float Range;
         public int Cost;
+        public int CostToUnlock;
+        public bool Lockable;
         public List<BloonType> AttackableBloons;
         public float AttackRate;
     }
