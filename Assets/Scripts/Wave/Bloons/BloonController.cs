@@ -13,6 +13,7 @@ namespace ServiceLocator.Wave.Bloon
         private BloonScriptableObject bloonScriptableObject;
 
         private const float waypointThreshold = 0.1f;
+        private const float startTime = 0f;
         private List<Vector3> waypoints;
         private int currentHealth;
         private int currentWaypointIndex;
@@ -32,7 +33,7 @@ namespace ServiceLocator.Wave.Bloon
             this.waveService = waveService;
             this.soundService = soundService;
 
-            bloonView = Object.Instantiate(bloonPrefab, bloonContainer);
+            bloonView = UnityEngine.Object.Instantiate(bloonPrefab, bloonContainer);
             bloonView.Controller = this;
         }
 
@@ -44,15 +45,20 @@ namespace ServiceLocator.Wave.Bloon
             totalDuration = 3f;
         }
 
-        public void CheckTimerToRegenerate()
+        public bool IsBloonTypeBoss()
         {
-            if (bloonScriptableObject.Type != BloonType.Boss) return;
+            return bloonScriptableObject.Type == BloonType.Boss;
+        }
+
+        public bool IsItTheTimeToRegenerate()
+        {
             timer += Time.deltaTime;
             if (timer >= totalDuration)
             {
-                timer = 0f;
-                RegenerateHealth();
+                timer = startTime;
+                return true;
             }
+            return false;
         }
 
         public void RegenerateHealth()
@@ -86,7 +92,7 @@ namespace ServiceLocator.Wave.Bloon
 
             if (currentHealth <= 0 && currentState == BloonState.ACTIVE)
             {
-                timer = 0f;
+                timer = startTime;
                 PopBloon();
                 soundService.PlaySoundEffects(Sound.SoundType.BloonPop);
             }
@@ -116,7 +122,7 @@ namespace ServiceLocator.Wave.Bloon
             waveService.RemoveBloon(this);
             playerService.TakeDamage(bloonScriptableObject.Damage);
             bloonView.gameObject.SetActive(false);
-            timer = 0f;
+            timer = startTime;
         }
 
         private Vector3 GetDirectionToMoveTowards() => waypoints[currentWaypointIndex] - bloonView.transform.position;

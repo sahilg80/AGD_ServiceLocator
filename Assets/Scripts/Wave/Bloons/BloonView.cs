@@ -2,12 +2,14 @@ using UnityEngine;
 
 namespace ServiceLocator.Wave.Bloon
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class BloonView : MonoBehaviour
     {
         public BloonController Controller { get ; set ; }
 
         private SpriteRenderer spriteRenderer;
         private Animator animator;
+        private bool isThisBloonBoss;
 
         private void Awake()
         {
@@ -15,15 +17,27 @@ namespace ServiceLocator.Wave.Bloon
             animator = GetComponent<Animator>();
         }
 
+        private void Start()
+        {
+            CheckBloonType();
+        }
+
+        private void CheckBloonType()
+        {
+            isThisBloonBoss = Controller.IsBloonTypeBoss();
+        }
+
         private void Update()
         {
-            Controller.CheckTimerToRegenerate();
+            if (isThisBloonBoss && Controller.IsItTheTimeToRegenerate())
+            {
+                Controller.RegenerateHealth();
+            }
             Controller.FollowWayPoints();
         }
 
         public void SetRenderer(Sprite spriteToSet)
         {
-            if (spriteRenderer == null) return;
             spriteRenderer.sprite = spriteToSet;
         }
 
