@@ -31,15 +31,9 @@ namespace ServiceLocator.UI
             originalAnchoredPosition = rectTransform.anchoredPosition;
         }
 
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            monkeyImage.color = new Color(1, 1, 1, 0.6f);
-        }
+        public void OnPointerDown(PointerEventData eventData) => monkeyImage.color = new Color(1, 1, 1, 0.6f);
 
-        public bool MonkeyUnlockStatus()
-        {
-            return owner.IsMonkeyUnlocked();
-        }
+        public bool MonkeyUnlockStatus() => owner.IsMonkeyUnlocked();
 
         public void OnDrag(PointerEventData eventData)
         {

@@ -12,6 +12,7 @@ namespace ServiceLocator.Wave.Bloon
         public BloonController Controller { get ; set ; }
         private SpriteRenderer spriteRenderer;
         private Animator animator;
+        private bool isThisBloonBoss;
         public event Action OnRegeneratingHealth;
         public event Action OnPopAnimationPlayed;
         public event Action OnFollowWayPoints;
@@ -22,8 +23,12 @@ namespace ServiceLocator.Wave.Bloon
             animator = GetComponent<Animator>();
         }
 
-        private void Start()
+        private void OnEnable()
         {
+            if (isThisBloonBoss)
+            {
+                StartCoroutine(TimerToRegenerate());
+            }
         }
 
         private void Update()
@@ -31,13 +36,9 @@ namespace ServiceLocator.Wave.Bloon
             OnFollowWayPoints?.Invoke();
         }
 
-        public void CheckBloonTypeToStartTimer(bool value)
+        public void SetBloonTypeIsBoss(bool value)
         {
-            bool isThisBloonBoss = value;
-            if (isThisBloonBoss)
-            {
-                StartCoroutine(TimerToRegenerate());
-            }
+            isThisBloonBoss = value;
         }
 
         private IEnumerator TimerToRegenerate()

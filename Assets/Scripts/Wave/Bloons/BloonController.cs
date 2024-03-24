@@ -56,7 +56,7 @@ namespace ServiceLocator.Wave.Bloon
         private void InitializeVariables()
         {
             bloonView.SetRenderer(bloonScriptableObject.Sprite);
-            bloonView.CheckBloonTypeToStartTimer(bloonScriptableObject.Type == BloonType.Boss);
+            bloonView.SetBloonTypeIsBoss(bloonScriptableObject.Type == BloonType.Boss);
             currentHealth = bloonScriptableObject.Health;
             waypoints = new List<Vector3>();
         }

@@ -5,6 +5,7 @@ using ServiceLocator.Main;
 using ServiceLocator.UI;
 using ServiceLocator.Sound;
 using ServiceLocator.Map;
+using System;
 
 namespace ServiceLocator.Player
 {
@@ -19,6 +20,7 @@ namespace ServiceLocator.Player
         private UIService uiService;
         private SoundService soundService;
         private MapService mapService;
+        public Action<int> OnDeductMoney { get; private set; }
 
         public int Money { get; private set; }
 
@@ -27,7 +29,12 @@ namespace ServiceLocator.Player
         {
             this.playerScriptableObject = playerScriptableObject;
             projectilePool = new ProjectilePool(playerScriptableObject.ProjectilePrefab, playerScriptableObject.ProjectileScriptableObjects, this);
-            
+            OnDeductMoney += DeductMoney;
+        }
+
+        ~PlayerService()
+        {
+            OnDeductMoney -= DeductMoney;
         }
 
         public void Init(UIService uiService, MapService mapService, SoundService soundService)
@@ -136,7 +143,7 @@ namespace ServiceLocator.Player
                 PlayerDeath();
         }
 
-        public void DeductMoney(int moneyToDedecut)
+        private void DeductMoney(int moneyToDedecut)
         {
             Money -= moneyToDedecut;
             uiService.UpdateMoneyUI(Money);

@@ -36,7 +36,7 @@ namespace ServiceLocator.UI
         public bool IsMonkeyUnlocked()
         {
             bool value = monkeyCellSO.Lockable && monkeyCellSO.CostToUnlock < playerService.Money;
-            if (value) playerService.DeductMoney(monkeyCellSO.CostToUnlock);
+            if (value) playerService.OnDeductMoney?.Invoke(monkeyCellSO.CostToUnlock);// playerService.DeductMoney(monkeyCellSO.CostToUnlock);
             return value;
         }
 
