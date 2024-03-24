@@ -35,6 +35,12 @@ namespace ServiceLocator.Wave.Bloon
 
             bloonView = UnityEngine.Object.Instantiate(bloonPrefab, bloonContainer);
             bloonView.Controller = this;
+            bloonView.OnRegeneratingHealth += RegenerateHealth;
+        }
+
+        ~BloonController()
+        {
+            bloonView.OnRegeneratingHealth -= RegenerateHealth;
         }
 
         public void Init(BloonScriptableObject bloonScriptableObject)
@@ -61,7 +67,7 @@ namespace ServiceLocator.Wave.Bloon
             return false;
         }
 
-        public void RegenerateHealth()
+        private void RegenerateHealth()
         {
             currentHealth += bloonScriptableObject.Health;
         }

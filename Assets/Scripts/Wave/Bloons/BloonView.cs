@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace ServiceLocator.Wave.Bloon
@@ -8,8 +10,9 @@ namespace ServiceLocator.Wave.Bloon
         public BloonController Controller { get ; set ; }
 
         private SpriteRenderer spriteRenderer;
+        private const float totalDuration = 3f;
         private Animator animator;
-        private bool isThisBloonBoss;
+        public event Action OnRegeneratingHealth;
 
         private void Awake()
         {
@@ -19,21 +22,37 @@ namespace ServiceLocator.Wave.Bloon
 
         private void Start()
         {
-            CheckBloonType();
+            CheckBloonTypeToStartTimer();
         }
 
-        private void CheckBloonType()
+        private void CheckBloonTypeToStartTimer()
         {
-            isThisBloonBoss = Controller.IsBloonTypeBoss();
+            bool isThisBloonBoss = Controller.IsBloonTypeBoss();
+            if (isThisBloonBoss)
+            {
+                StartCoroutine(CheckTimer());
+            }
         }
 
         private void Update()
         {
-            if (isThisBloonBoss && Controller.IsItTheTimeToRegenerate())
-            {
-                Controller.RegenerateHealth();
-            }
             Controller.FollowWayPoints();
+        }
+
+        IEnumerator CheckTimer()
+        {
+            float timeElapsed = 0f;
+            while (true)
+            {
+                timeElapsed += Time.deltaTime;
+                if (timeElapsed >= totalDuration)
+                {
+                    // invoke event to regenerate health
+                    OnRegeneratingHealth?.Invoke();
+                    timeElapsed = 0;
+                }
+                yield return null;
+            }
         }
 
         public void SetRenderer(Sprite spriteToSet)
