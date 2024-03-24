@@ -1,24 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
-using ServiceLocator.Main;
 using ServiceLocator.Player;
-using ServiceLocator.Map;
 using ServiceLocator.Sound;
 
 namespace ServiceLocator.Wave.Bloon
 {
     public class BloonController
     {
+        private const float waypointThreshold = 0.1f;
         private BloonView bloonView;
         private BloonScriptableObject bloonScriptableObject;
-
-        private const float waypointThreshold = 0.1f;
-        private const float startTime = 0f;
         private List<Vector3> waypoints;
         private int currentHealth;
         private int currentWaypointIndex;
-        private float timer;
-        private float totalDuration;
         private BloonState currentState;
         private PlayerService playerService;
         private WaveService waveService;
@@ -33,14 +27,18 @@ namespace ServiceLocator.Wave.Bloon
             this.waveService = waveService;
             this.soundService = soundService;
 
-            bloonView = UnityEngine.Object.Instantiate(bloonPrefab, bloonContainer);
+            bloonView = Object.Instantiate(bloonPrefab, bloonContainer);
             bloonView.Controller = this;
             bloonView.OnRegeneratingHealth += RegenerateHealth;
+            bloonView.OnPopAnimationPlayed += OnPopAnimationPlayed;
+            bloonView.OnFollowWayPoints += FollowWayPoints; ;
         }
 
         ~BloonController()
         {
             bloonView.OnRegeneratingHealth -= RegenerateHealth;
+            bloonView.OnPopAnimationPlayed -= OnPopAnimationPlayed;
+            bloonView.OnFollowWayPoints -= FollowWayPoints; ;
         }
 
         public void Init(BloonScriptableObject bloonScriptableObject)
@@ -48,23 +46,6 @@ namespace ServiceLocator.Wave.Bloon
             this.bloonScriptableObject = bloonScriptableObject;
             InitializeVariables();
             SetState(BloonState.ACTIVE);
-            totalDuration = 3f;
-        }
-
-        public bool IsBloonTypeBoss()
-        {
-            return bloonScriptableObject.Type == BloonType.Boss;
-        }
-
-        public bool IsItTheTimeToRegenerate()
-        {
-            timer += Time.deltaTime;
-            if (timer >= totalDuration)
-            {
-                timer = startTime;
-                return true;
-            }
-            return false;
         }
 
         private void RegenerateHealth()
@@ -75,6 +56,7 @@ namespace ServiceLocator.Wave.Bloon
         private void InitializeVariables()
         {
             bloonView.SetRenderer(bloonScriptableObject.Sprite);
+            bloonView.CheckBloonTypeToStartTimer(bloonScriptableObject.Type == BloonType.Boss);
             currentHealth = bloonScriptableObject.Health;
             waypoints = new List<Vector3>();
         }
@@ -98,13 +80,12 @@ namespace ServiceLocator.Wave.Bloon
 
             if (currentHealth <= 0 && currentState == BloonState.ACTIVE)
             {
-                timer = startTime;
                 PopBloon();
                 soundService.PlaySoundEffects(Sound.SoundType.BloonPop);
             }
         }
 
-        public void FollowWayPoints()
+        private void FollowWayPoints()
         {
             if(HasReachedFinalWaypoint())
             {
@@ -128,7 +109,6 @@ namespace ServiceLocator.Wave.Bloon
             waveService.RemoveBloon(this);
             playerService.TakeDamage(bloonScriptableObject.Damage);
             bloonView.gameObject.SetActive(false);
-            timer = startTime;
         }
 
         private Vector3 GetDirectionToMoveTowards() => waypoints[currentWaypointIndex] - bloonView.transform.position;
@@ -143,7 +123,7 @@ namespace ServiceLocator.Wave.Bloon
             bloonView.PopBloon();
         }
 
-        public void OnPopAnimationPlayed()
+        private void OnPopAnimationPlayed()
         {
             if (HasLayeredBloons())
                 SpawnLayeredBloons();

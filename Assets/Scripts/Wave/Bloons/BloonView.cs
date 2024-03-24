@@ -7,12 +7,14 @@ namespace ServiceLocator.Wave.Bloon
     [RequireComponent(typeof(SpriteRenderer))]
     public class BloonView : MonoBehaviour
     {
-        public BloonController Controller { get ; set ; }
-
-        private SpriteRenderer spriteRenderer;
         private const float totalDuration = 3f;
+        private const float startTime = 0f;
+        public BloonController Controller { get ; set ; }
+        private SpriteRenderer spriteRenderer;
         private Animator animator;
         public event Action OnRegeneratingHealth;
+        public event Action OnPopAnimationPlayed;
+        public event Action OnFollowWayPoints;
 
         private void Awake()
         {
@@ -22,26 +24,25 @@ namespace ServiceLocator.Wave.Bloon
 
         private void Start()
         {
-            CheckBloonTypeToStartTimer();
-        }
-
-        private void CheckBloonTypeToStartTimer()
-        {
-            bool isThisBloonBoss = Controller.IsBloonTypeBoss();
-            if (isThisBloonBoss)
-            {
-                StartCoroutine(CheckTimer());
-            }
         }
 
         private void Update()
         {
-            Controller.FollowWayPoints();
+            OnFollowWayPoints?.Invoke();
         }
 
-        IEnumerator CheckTimer()
+        public void CheckBloonTypeToStartTimer(bool value)
         {
-            float timeElapsed = 0f;
+            bool isThisBloonBoss = value;
+            if (isThisBloonBoss)
+            {
+                StartCoroutine(TimerToRegenerate());
+            }
+        }
+
+        private IEnumerator TimerToRegenerate()
+        {
+            float timeElapsed = startTime;
             while (true)
             {
                 timeElapsed += Time.deltaTime;
@@ -49,7 +50,7 @@ namespace ServiceLocator.Wave.Bloon
                 {
                     // invoke event to regenerate health
                     OnRegeneratingHealth?.Invoke();
-                    timeElapsed = 0;
+                    timeElapsed = startTime;
                 }
                 yield return null;
             }
@@ -72,7 +73,7 @@ namespace ServiceLocator.Wave.Bloon
         {
             spriteRenderer.sprite = null;
             gameObject.SetActive(false);
-            Controller.OnPopAnimationPlayed();
+            OnPopAnimationPlayed?.Invoke();
         }
 
     }
